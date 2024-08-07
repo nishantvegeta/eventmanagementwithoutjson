@@ -1,0 +1,47 @@
+{% extends "events/base.html" %}
+{% block content %}
+    
+    <form method="get">
+        {{ filter_form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+    
+    <h2 class="event-list-header">Event List</h2>
+    <div class="event-list-container">
+        {% for event in events %}
+            <div class="event-box">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}">
+                {% else %}
+                    <img src="{% static 'events/default.jpg' %}" alt="Default Event Image">
+                {% endif %}
+
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.description|truncatewords:20 }}</p>
+                <p><strong>Location:</strong> {{ event.location }}</p>
+                <p><strong>Participants:</strong> {{ event.total_participants }}</p>
+                <p><strong>Start Date:</strong> {{ event.start_date }}</p>
+                <p><strong>End Date:</strong> {{ event.end_date }}</p>
+                <p><strong>Organizer:</strong>{{ event.organizer.username }}</p>
+                <a href="{% url 'event_detail' event.id %}" class="btn btn-primary">View Details</a>
+
+                {% if event.organizer == request.user %}
+                    <p><em>You are the organizer of this event.</em></p>
+                {% else %}
+                    {% if not event.is_booked %}
+                        <a href="{% url 'book_event' event.id %}">Book Now</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if event.is_booked %}
+                    <span>Booked</span>
+                {% endif %}
+
+                {% if request.user.is_superuser %}
+                    <a href="{% url 'event_update' event.id %}">Edit</a> |
+                    <a href="{% url 'event_delete' event.id %}">Delete</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+{% endblock %}

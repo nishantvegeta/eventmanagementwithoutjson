@@ -1,0 +1,28 @@
+{% extends "events/base.html" %}
+
+{% block content %}
+<div class="booking-container">
+    <div class="event-details-box">
+        <h2>{{ event.title }}</h2>
+        <p>{{ event.description }}</p>
+        <p><strong>Start Date:</strong> {{ event.start_date }}</p>
+        <p><strong>End Date:</strong> {{ event.end_date }}</p>
+        <p><strong>Location:</strong> {{ event.location }}</p>
+    </div>
+    <div class="form-box">
+        <h3>Book Event</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="user">User:</label>
+                <input type="text" id="user" name="user" value="{{ user }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="event">Event:</label>
+                <input type="text" id="title" name="title" value="{{ event.title }}" readonly required>
+            </div>
+            <button type="submit">Book Event</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
